@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      #right-panel {
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+
+      #right-panel select, #right-panel input {
+        font-size: 15px;
+      }
+
+      #right-panel select {
+        width: 100%;
+      }
+
+      #right-panel i {
+        font-size: 12px;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+        float: left;
+        width: 100%;
+        height: 100%;
+      }
+      #right-panel {
+        margin: 20px;
+        border-width: 2px;
+        width: 20%;
+        height: 400px;
+        float: left;
+        text-align: left;
+        padding-top: 0;
+      }
+      #directions-panel {
+        margin-top: 10px;
+        background-color: #FFEE77;
+        padding: 10px;
+        overflow: scroll;
+        height: 174px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="right-panel">
+    <script>
+      function initMap() {
+	  
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat:39.016611, lng:34.970583}
+        });
+        directionsDisplay.setMap(map);
+		window.onload(calculateAndDisplayRoute(directionsService, directionsDisplay))
+      }
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        var waypts = [];
+        var baslangic= "";
+		var bitis = "";
+		var checkboxArray = [];
+		var koordinat_mi=true;
+		if(koordinat_mi){
+			baslangic = "38.651312, 39.134150";
+			bitis = "38.650674, 39.195713";
+			duraklar = ["38.667208, 39.174472","38.669680, 39.187163","40.979898, 28.819907","37.007280, 35.325316","37.929000, 40.16919"];
+			
+			for(var i = 0; i < duraklar.length;i++){
+				var loc = new google.maps.LatLng(parseFloat(duraklar[i].split(",")[0]),parseFloat(duraklar[i].split(",")[1]));
+				waypts.push({location: loc,stopover: true});
+			}
+			baslangic = new google.maps.LatLng(parseFloat(baslangic.split(",")[0]),parseFloat(baslangic.split(",")[1]));
+			bitis = new google.maps.LatLng(parseFloat(bitis.split(",")[0]),parseFloat(bitis.split(",")[1]));
+		}
+        var a = directionsService.route({
+          origin: baslangic,
+          destination: bitis,
+          waypoints: waypts,
+          optimizeWaypoints: true,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+            var route = response.routes[0];
+            var summaryPanel = document.getElementById('directions-panel');
+            summaryPanel.innerHTML = '';
+          }else {
+            window.alert('Hata var ' + status);
+          }
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+    </script>
+  </body>
+</html>

@@ -1,4 +1,6 @@
 # map
+![Harita görünümü](/Map.html.png)
+
 
 Durakları eklenmiş yol haritası
  
